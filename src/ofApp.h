@@ -23,42 +23,38 @@ class ofApp : public ofBaseApp
 	void windowResized(int w, int h);
 	void dragEvent(ofDragInfo dragInfo);
 	void gotMessage(ofMessage msg);
-    void saveFbo();
-    void onSaveImagePressed();
-    void onClearPressed();
 
-	list<Particle> mParticles;
-
-	bool mIsDrawing;
-    int mCurrentSourceIndex;
-
-	ofVec2f mMousePos;
-	ofFbo mCanvas;
-    ofxPanel mGui;
-
-	ofxFloatSlider mStepX;
-	ofxFloatSlider mStepY;
-	ofxFloatSlider mStepZ;
-    ofxFloatSlider mMinLifetime;
-    ofxFloatSlider mMaxLifetime;
-    ofxFloatSlider mMinScale;
-    ofxFloatSlider mMaxScale;
-    ofxFloatSlider mMinAlpha;
-    ofxFloatSlider mMaxAlpha;
-    ofxFloatSlider mMultX;
-    ofxFloatSlider mMultY;
-    ofxFloatSlider mDamp;
-    ofxFloatSlider mSourceChangeFrequency;
-    ofxButton mSaveImage;
-    ofxButton mClear;
-
-
-	ofVec2f resizeProportionally(float srcWidth, float srcHeight, float maxWidth, float maxHeight);
-    
+	void saveFbo();
+	void onSaveImagePressed();
+	void onClearPressed();
 	void loadSlices();
 	void loadSlicesFromSource();
 	void loadSources();
+	ofVec2f resizeProportionally(float srcWidth, float srcHeight, float maxWidth, float maxHeight);
 
+	list<Particle> mParticles;
 	vector<ofImage> mSlices;
 	vector<ofImage> mSources;
+
+	bool mIsDrawing;
+	int mCurrentSourceIndex;
+
+	ofVec2f mMousePos;
+	ofFbo mCanvas;
+	ofxPanel mGui;
+	ofxFloatSlider mStepX;
+	ofxFloatSlider mStepY;
+	ofxFloatSlider mStepZ;
+	ofxFloatSlider mMinLifetime;
+	ofxFloatSlider mMaxLifetime;
+	ofxFloatSlider mMinScale;
+	ofxFloatSlider mMaxScale;
+	ofxFloatSlider mMinAlpha;
+	ofxFloatSlider mMaxAlpha;
+	ofxFloatSlider mMultX;
+	ofxFloatSlider mMultY;
+	ofxFloatSlider mDamp;
+	ofxFloatSlider mSourceChangeFrequency;
+	ofxButton mSaveImage;
+	ofxButton mClear;
 };

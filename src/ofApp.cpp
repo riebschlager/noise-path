@@ -4,7 +4,7 @@
 void ofApp::setup()
 {
     mSaveImage.addListener(this, &ofApp::onSaveImagePressed);
-     mClear.addListener(this, &ofApp::onClearPressed);
+    mClear.addListener(this, &ofApp::onClearPressed);
 
     mGui.setup();
     mGui.add(mStepX.setup("mStepX", 0.005f, 0, 0.1f));
@@ -22,11 +22,14 @@ void ofApp::setup()
     mGui.add(mSourceChangeFrequency.setup("mSourceChangeFrequency", 0, 0, 0.1));
     mGui.add(mClear.setup("mClear"));
     mGui.add(mSaveImage.setup("mSaveImage"));
+
+    mCurrentSourceIndex = 0;
+
     mCanvas.allocate(1920 * 2, 1080 * 2, GL_RGBA);
     mCanvas.begin();
-    mCurrentSourceIndex = 0;
     ofBackground(0, 0, 0);
     mCanvas.end();
+
     loadSlices();
     loadSources();
 }
@@ -167,17 +170,14 @@ void ofApp::saveFbo()
     ofSaveImage(pixels, "output/image" + ofToString(ofGetUnixTime()) + ".tif");
 }
 
-//--------------------------------------------------------------
 void ofApp::keyPressed(int key)
 {
 }
 
-//--------------------------------------------------------------
 void ofApp::keyReleased(int key)
 {
 }
 
-//--------------------------------------------------------------
 void ofApp::mouseMoved(int x, int y)
 {
     float mX = ofMap(x, 0, ofGetWidth(), 0, mCanvas.getWidth());
@@ -185,7 +185,6 @@ void ofApp::mouseMoved(int x, int y)
     mMousePos.set(mX, mY);
 }
 
-//--------------------------------------------------------------
 void ofApp::mouseDragged(int x, int y, int button)
 {
     float mX = ofMap(x, 0, ofGetWidth(), 0, mCanvas.getWidth());
@@ -193,39 +192,32 @@ void ofApp::mouseDragged(int x, int y, int button)
     mMousePos.set(mX, mY);
 }
 
-//--------------------------------------------------------------
 void ofApp::mousePressed(int x, int y, int button)
 {
     mIsDrawing = true;
 }
 
-//--------------------------------------------------------------
 void ofApp::mouseReleased(int x, int y, int button)
 {
     mIsDrawing = false;
 }
 
-//--------------------------------------------------------------
 void ofApp::mouseEntered(int x, int y)
 {
 }
 
-//--------------------------------------------------------------
 void ofApp::mouseExited(int x, int y)
 {
 }
 
-//--------------------------------------------------------------
 void ofApp::windowResized(int w, int h)
 {
 }
 
-//--------------------------------------------------------------
 void ofApp::gotMessage(ofMessage msg)
 {
 }
 
-//--------------------------------------------------------------
 void ofApp::dragEvent(ofDragInfo dragInfo)
 {
 }

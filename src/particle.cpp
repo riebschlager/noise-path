@@ -38,6 +38,7 @@ void Particle::update(float stepX, float stepY, float stepZ, float multX, float 
     mAge++;
 }
 
-void Particle::draw(ofImage* slice) {
+void Particle::draw(ofImage *slice)
+{
     slice->draw(mPosition.x, mPosition.y);
 }

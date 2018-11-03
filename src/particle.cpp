@@ -1,30 +1,18 @@
 #include "particle.hpp"
 
-Particle::Particle(ofVec2f position, ofVec2f velocity, float lifetime, float radius, ofColor color)
+Particle::Particle(ofVec2f position, float lifetime)
 {
     mPosition = position;
-    mVelocity = velocity;
+    mVelocity = ofVec2f(0, 0);
     mLifetime = lifetime;
-    mRadius = radius;
-    mColor = color;
-    mAge = 0.0f;
+    mAge = 0;
     mIsDead = false;
 }
 
 void Particle::update(float stepX, float stepY, float stepZ, float multX, float multY, float damp)
 {
 
-    if (1.0f - mAge / mLifetime <= 0.0f)
-    {
-        mIsDead = true;
-    }
-
-    if (mPosition.x < 0 || mPosition.x > ofGetWidth())
-    {
-        mIsDead = true;
-    }
-
-    if (mPosition.y < 0 || mPosition.y > ofGetHeight())
+    if (mAge > mLifetime)
     {
         mIsDead = true;
     }
@@ -36,9 +24,4 @@ void Particle::update(float stepX, float stepY, float stepZ, float multX, float 
     mVelocity *= damp;
     mPosition += mVelocity;
     mAge++;
-}
-
-void Particle::draw(ofImage *slice)
-{
-    slice->draw(mPosition.x, mPosition.y);
 }

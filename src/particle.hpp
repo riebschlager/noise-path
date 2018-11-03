@@ -7,24 +7,21 @@
 class Particle
 {
 
-  public:
-    Particle(ofVec2f position, ofVec2f velocity, float lifetime, float radius, ofColor color);
+public:
+  Particle(ofVec2f position, float lifetime);
 
-    ofVec2f mPosition;
-    ofVec2f mVelocity;
-    ofVec2f mNoiseVec;
+  ofVec2f mPosition;
+  ofVec2f mVelocity;
+  ofVec2f mNoiseVec;
 
-    float mNoiseFloat;
-    float mLifetime;
-    float mRadius;
-    float mAge;
+  float mNoiseFloat;
+  float mLifetime;
 
-    bool mIsDead;
+  uint mAge;
 
-    ofColor mColor;
+  bool mIsDead;
 
-    void update(float stepX, float stepY, float stepZ, float multX, float multY, float damp);
-    void draw(ofImage *slice);
+  void update(float stepX, float stepY, float stepZ, float multX, float multY, float damp);
 };
 
 #endif

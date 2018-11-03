@@ -7,21 +7,24 @@ void ofApp::setup()
     mClear.addListener(this, &ofApp::onClearPressed);
 
     mGui.setup();
-    mGui.add(mStepX.setup("mStepX", 0.005f, 0, 0.1f));
-    mGui.add(mStepY.setup("mStepY", 0.005f, 0, 0.1f));
-    mGui.add(mStepZ.setup("mStepZ", 0.005f, 0, 0.1f));
-    mGui.add(mMinLifetime.setup("mMinLifetime", 20.0f, 0.0f, 2000.0f));
-    mGui.add(mMaxLifetime.setup("mMaxLifetime", 1000.0f, 0.0f, 2000.0f));
-    mGui.add(mMinScale.setup("mMinScale", 0.1f, -5.0f, 5.0f));
-    mGui.add(mMaxScale.setup("mMaxScale", 1.0f, -5.0f, 5.0f));
-    mGui.add(mMinAlpha.setup("mMinAlpha", 0.0f, 0.0f, 255.0f));
-    mGui.add(mMaxAlpha.setup("mMaxAlpha", 255.0f, 0.0f, 255.0f));
+    mGui.add(mNoiseScaleX.setup("Noise Scale X", 0.005f, 0, 0.1f));
+    mGui.add(mNoiseScaleY.setup("Noise Scale Y", 0.005f, 0, 0.1f));
+    mGui.add(mNoiseScaleZ.setup("Noise Scale Z", 0.005f, 0, 0.1f));
+    mGui.add(mMinLifetime.setup("Lifetime Min", 20.0f, 0.0f, 2000.0f));
+    mGui.add(mMaxLifetime.setup("Lifetime Max", 1000.0f, 0.0f, 2000.0f));
+    mGui.add(mMinScale.setup("Scale Min", 0.1f, -5.0f, 5.0f));
+    mGui.add(mMaxScale.setup("Scale Max", 1.0f, -5.0f, 5.0f));
+    mGui.add(mMinRotation.setup("Rotation Min", -10.0f, -360.0f, 360.0f));
+    mGui.add(mMaxRotation.setup("Rotation Max", 10.0f, -360.0f, 360.0f));
+    mGui.add(mMinAlpha.setup("Alpha Min", 0.0f, 0.0f, 255.0f));
+    mGui.add(mMaxAlpha.setup("Alpha Max", 255.0f, 0.0f, 255.0f));
     mGui.add(mMultX.setup("mMultX", 5.0f, 0.0f, 255.0f));
     mGui.add(mMultY.setup("mMultY", 5.0f, 0.0f, 255.0f));
-    mGui.add(mDamp.setup("mDamp", 1.0f, 0.0f, 2.0f));
-    mGui.add(mSourceChangeFrequency.setup("mSourceChangeFrequency", 0, 0, 0.1));
-    mGui.add(mClear.setup("mClear"));
-    mGui.add(mSaveImage.setup("mSaveImage"));
+    mGui.add(mFriction.setup("Friction", 1.0f, 0.0f, 2.0f));
+    mGui.add(mSourceChangeFrequency.setup("Source Change Frequency", 0, 0, 0.1));
+    mGui.add(mDrawsPerFrame.setup("Draws Per Frame", 1, 1, 1000));
+    mGui.add(mClear.setup("Clear"));
+    mGui.add(mSaveImage.setup("Save Image"));
 
     mCurrentSourceIndex = 0;
 
@@ -30,8 +33,9 @@ void ofApp::setup()
     ofBackground(0, 0, 0);
     mCanvas.end();
 
-    loadSlices();
-    loadSources();
+    //    loadSlices("flora");
+    loadSlicesFromSource("vangogh", 100, 300, 300);
+    loadSources("face");
 }
 
 void ofApp::onClearPressed()
@@ -52,25 +56,41 @@ ofVec2f ofApp::resizeProportionally(float srcWidth, float srcHeight, float maxWi
     return ofVec2f(srcWidth * ratio, srcHeight * ratio);
 }
 
-void ofApp::loadSlices()
+void ofApp::loadSlices(string folderName)
 {
-    string path = "./slices/flora";
+    string path = "./slices/" + folderName;
     ofDirectory dir(path);
+    dir.allowExt("png");
     dir.allowExt("png");
     dir.listDir();
     for (int i = 0; i < dir.size(); i++)
     {
         ofImage img;
         img.load(dir.getPath(i));
-        ofVec2f r = resizeProportionally(img.getWidth(), img.getHeight(), 300, 300);
+        mSlices.push_back(img);
+    }
+}
+
+void ofApp::loadSlices(string folderName, uint maxWidth, uint maxHeight)
+{
+    string path = "./slices/" + folderName;
+    ofDirectory dir(path);
+    dir.allowExt("png");
+    dir.allowExt("png");
+    dir.listDir();
+    for (int i = 0; i < dir.size(); i++)
+    {
+        ofImage img;
+        img.load(dir.getPath(i));
+        ofVec2f r = resizeProportionally(img.getWidth(), img.getHeight(), maxWidth, maxHeight);
         img.resize(r.x, r.y);
         mSlices.push_back(img);
     }
 }
 
-void ofApp::loadSlicesFromSource()
+void ofApp::loadSlicesFromSource(string folderName, uint numberOfSlices, uint maxWidth, uint maxHeight)
 {
-    string path = "./sources/face";
+    string path = "./sources/" + folderName;
     ofDirectory dir(path);
     dir.allowExt("png");
     dir.allowExt("jpg");
@@ -79,18 +99,22 @@ void ofApp::loadSlicesFromSource()
     {
         ofImage img;
         img.load(dir.getPath(i));
-        for (int j = 0; j < 10; j++)
+        for (uint j = 0; j < numberOfSlices; j++)
         {
             ofImage slice;
-            slice.cropFrom(img, ofRandom(img.getWidth()), ofRandom(img.getHeight()), ofRandom(300), ofRandom(300));
+            uint w = ofRandom(maxWidth);
+            uint h = ofRandom(maxHeight);
+            uint x = ofRandom(0, img.getWidth() - w);
+            uint y = ofRandom(0, img.getHeight() - h);
+            slice.cropFrom(img, x, y, w, h);
             mSlices.push_back(slice);
         }
     }
 }
 
-void ofApp::loadSources()
+void ofApp::loadSources(string folderName)
 {
-    string path = "./sources/one";
+    string path = "./sources/" + folderName;
     ofDirectory dir(path);
     dir.allowExt("png");
     dir.allowExt("jpg");
@@ -114,9 +138,7 @@ void ofApp::update()
         }
         ofVec2f velocity(0, 0);
         float lifetime = ofRandom(mMinLifetime, mMaxLifetime);
-        float radius = ofRandom(1.0f, 5.0f);
-        ofColor color = ofColor(255, 255, 255);
-        mParticles.push_back(Particle(mMousePos, velocity, lifetime, radius, color));
+        mParticles.push_back(Particle(mMousePos, lifetime));
     }
 }
 
@@ -132,18 +154,17 @@ void ofApp::draw()
         }
         else
         {
-            for (int i = 0; i < 10; i++)
+            for (uint i = 0; i < mDrawsPerFrame; i++)
             {
-                int sliceIndex = floor(ofRandom(mSlices.size()));
-                p->update(mStepX, mStepY, mStepZ, mMultX, mMultY, mDamp);
+                uint sliceIndex = ofMap(p->mNoiseFloat, 0, 1, 0, mSlices.size());
+                p->update(mNoiseScaleX, mNoiseScaleY, mNoiseScaleZ, mMultX, mMultY, mFriction);
                 ofPushMatrix();
                 ofTranslate(p->mPosition.x, p->mPosition.y);
-                int x = ofClamp(p->mPosition.x, 0, mCanvas.getWidth());
-                int y = ofClamp(p->mPosition.y, 0, mCanvas.getHeight());
-                //ofColor color = mSources[mCurrentSourceIndex].getColor(mMousePos.x, mMousePos.y);
+                uint x = ofClamp(p->mPosition.x, 0, mCanvas.getWidth());
+                uint y = ofClamp(p->mPosition.y, 0, mCanvas.getHeight());
                 ofColor color = mSources[mCurrentSourceIndex].getColor(x, y);
                 ofScale(ofMap(p->mNoiseFloat, 0, 1, mMinScale, mMaxScale, true));
-                ofRotateDeg(ofMap(p->mNoiseFloat, 0, 1, -360, 360));
+                ofRotateDeg(ofMap(p->mNoiseFloat, 0, 1, mMinRotation, mMaxRotation));
                 float alpha = ofMap(p->mNoiseFloat, 0, 1, mMinAlpha, mMaxAlpha, true);
                 ofSetColor(color, alpha);
                 mSlices[sliceIndex].draw(0, 0);

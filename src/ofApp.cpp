@@ -164,7 +164,7 @@ void ofApp::draw()
                 ofTranslate(p->mPosition.x, p->mPosition.y);
                 uint x = ofClamp(p->mPosition.x, 0, mCanvas.getWidth() - 1);
                 uint y = ofClamp(p->mPosition.y, 0, mCanvas.getHeight() - 1);
-//                ofColor color = mSources[mCurrentSourceIndex].getColor(x, y);
+                //                ofColor color = mSources[mCurrentSourceIndex].getColor(x, y);
                 ofColor color = p->mColor;
                 ofScale(ofMap(p->mNoiseFloat, 0, 1, mMinScale, mMaxScale, true));
                 ofRotateDeg(ofMap(p->mNoiseFloat, 0, 1, mMinRotation, mMaxRotation));

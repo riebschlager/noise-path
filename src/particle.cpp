@@ -1,12 +1,14 @@
 #include "particle.hpp"
 
-Particle::Particle(ofVec2f position, float lifetime)
+Particle::Particle(ofVec2f position, float lifetime, uint sliceIndex, ofColor color)
 {
     mPosition = position;
     mVelocity = ofVec2f(0, 0);
     mLifetime = lifetime;
     mAge = 0;
     mIsDead = false;
+    mSliceIndex = sliceIndex;
+    mColor = color;
 }
 
 void Particle::update(float stepX, float stepY, float stepZ, float multX, float multY, float damp)

@@ -8,16 +8,18 @@ class Particle
 {
 
 public:
-  Particle(ofVec2f position, float lifetime);
+  Particle(ofVec2f position, float lifetime, uint sliceIndex, ofColor color);
 
   ofVec2f mPosition;
   ofVec2f mVelocity;
   ofVec2f mNoiseVec;
+  ofColor mColor;
 
   float mNoiseFloat;
   float mLifetime;
 
   uint mAge;
+  uint mSliceIndex;
 
   bool mIsDead;
 
